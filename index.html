@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeu d'Écritures Comptables</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, #score {
+      text-align: center;
+    }
+    .ligne {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    input, select, button {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1d4ed8;
+    }
+    #plan-comptable {
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #f1f5f9;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎓 Jeu d'Écritures Comptables</h1>
+    <div id="score">Score : 0</div>
+    <div id="operation">Chargement...</div>
+    <form id="ecriture-form">
+      <div id="ecritures"></div>
+      <button type="button" onclick="ajouterLigne()">+ Ajouter ligne</button>
+      <button type="submit">Valider</button>
+    </form>
+    <div id="solution"></div>
+    <button onclick="togglePlanComptable()">📘 Voir le plan comptable</button>
+    <div id="plan-comptable">
+      <input type="text" id="search-pcg" placeholder="🔍 Rechercher un compte..." onkeyup="searchPCG()" style="width: 100%; margin-bottom: 10px;">
+      <ul id="pcg-list" style="list-style: none; padding: 0;"></ul>
+    </div>
+  </div>
+
+<script>
+let libellesPCG = {};
+fetch("pcg2025.json")
+  .then(response => response.json())
+  .then(data => libellesPCG = data)
+  .catch(error => console.error("Erreur de chargement du fichier PCG :", error));
+
+// Les autres scripts JavaScript seraient insérés ici (non inclus ici pour concision)
+</script>
+</body>
+</html>
