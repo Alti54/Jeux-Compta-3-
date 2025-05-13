@@ -135,7 +135,7 @@ function ajouterLigne() {
 function chargerOperation() {
   const opList = operations[niveau];
   currentOp = opList[Math.floor(Math.random() * opList.length)];
-  document.getElementById("operation").innerText = currentOp.description;
+  document.getElementById("operation").innerHTML = `<div style='background:#e0f2fe;border-left:4px solid #0284c7;padding:10px;border-radius:8px;font-size:18px;margin-bottom:15px;'>📘 <strong>Opération :</strong> ${currentOp.description}</div>`;
   document.getElementById("ecritures").innerHTML = '';
   ajouterLigne();
 }
@@ -168,11 +168,21 @@ function togglePlanComptable() {
   const plan = document.getElementById('plan-comptable');
   plan.style.display = plan.style.display === 'none' ? 'block' : 'none';
   const pcgList = document.getElementById('pcg-list');
-  if (pcgList.innerHTML === '') {
-    const codes = Object.keys(libellesPCG).sort();
-    for (const code of codes) {
-      const li = document.createElement('li');
-      li.textContent = `${code} - ${libellesPCG[code]}`;
+  pcgList.innerHTML = ''; // Réinitialise avant chaque affichage
+  if (Object.keys(libellesPCG).length === 0) {
+    const errorMessage = document.createElement('p');
+    errorMessage.style.color = 'red';
+    errorMessage.textContent = "❌ Impossible d'afficher le plan comptable. Le fichier n'a pas été chargé.";
+    pcgList.appendChild(errorMessage);
+    return;
+  }
+  const codes = Object.keys(libellesPCG).sort();
+  for (const code of codes) {
+    const li = document.createElement('li');
+    li.textContent = `${code} - ${libellesPCG[code]}`;
+    pcgList.appendChild(li);
+  }
+} - ${libellesPCG[code]}`;
       pcgList.appendChild(li);
     }
   }
@@ -335,7 +345,21 @@ function searchPCG() {
   });
 }
 
-window.onload = chargerOperation;
+window.onload = function() {
+  chargerOperation();
+  fetch("pcg2025.json")
+    .then(response => {
+      if (!response.ok) throw new Error("Fichier introuvable");
+      return response.json();
+    })
+    .then(data => {
+      libellesPCG = data;
+    })
+    .catch(error => {
+      console.error("Erreur lors du chargement du PCG:", error);
+      document.getElementById("operation").innerText = "❌ Impossible de charger le plan comptable : données manquantes.";
+    });
+};
 </script>
 </body>
 </html>
